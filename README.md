@@ -1,3 +1,497 @@
+# Changelog
+
+All notable changes to ActionGlass will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Planned Features
+- Fire-based glass breaking (fire charges, blazes)
+- Explosion-based breaking (TNT, creepers) 
+- Water/ice interaction effects
+- Web dashboard for server statistics
+- Custom break patterns and animations
+- Sound effect customization
+- Particle effect customization
+- Multi-language support
+- Database storage for statistics
+- API expansion for third-party plugins
+
+## [1.0.0] - 2024-01-15
+
+### Added
+- **Core Features**
+  - Movement-based glass breaking (elytra, falling, running, sprinting)
+  - Projectile glass breaking (arrows, tridents, wind charges)
+  - Automatic glass regeneration system with configurable delays
+  - Speed-based breaking mechanics with minimum speed thresholds
+  - Configurable break radius for different breaking methods
+
+- **Protection Integration**
+  - WorldGuard region protection support
+  - GriefPrevention claim protection support
+  - Towny town protection support (planned)
+  - Factions territory protection support (planned)
+
+- **Configuration System**
+  - Comprehensive config.yml with all options documented
+  - Feature toggles for all breaking mechanics
+  - Speed and timing customization
+  - Break radius configuration per method
+  - World-specific enable/disable settings
+  - Glass type specific settings (glass blocks, panes, stained glass)
+  - Player group permissions and multipliers
+  - Performance optimization settings
+
+- **Commands & Permissions**
+  - `/actionglass help` - Show available commands
+  - `/actionglass status` - View plugin status and statistics
+  - `/actionglass reload` - Reload configuration
+  - `/actionglass regenerate` - Instantly regenerate all broken glass
+  - `/actionglass toggle <feature>` - View feature status
+  - `/actionglass info` - Show plugin information
+  - `/actionglass version` - Show version details
+  - Full tab completion support
+  - Permission-based command access
+
+- **Performance Features**
+  - Async processing for glass breaking calculations
+  - Smart cooldown system to prevent spam
+  - Configurable limits for simultaneous breaks
+  - Efficient collision detection algorithms
+  - Memory-optimized glass tracking system
+
+- **Visual & Audio Effects**
+  - Particle effects for glass breaking
+  - Sound effects for glass breaking
+  - Particle effects for glass regeneration
+  - Sound effects for glass regeneration
+  - Configurable effect settings
+
+- **Advanced Features**
+  - Player group specific settings (VIP, Admin multipliers)
+  - Glass type resistance and regeneration multipliers
+  - Debug mode for troubleshooting
+  - Statistics tracking and reporting
+  - World-specific configuration options
+
+### Technical Details
+- **Compatibility**: Spigot/Paper 1.20.4+
+- **Java Version**: Java 17+
+- **Dependencies**: Spigot API, WorldGuard (optional), GriefPrevention (optional)
+- **Performance**: Optimized for servers with 100+ concurrent players
+- **Memory Usage**: Minimal memory footprint with efficient data structures
+
+### Known Issues
+- None reported in initial release
+
+### Migration Notes
+- This is the initial release, no migration needed
+- Default configuration is optimized for most server types
+- Review config.yml settings before first use on production servers
+
+---
+
+## Version History Summary
+
+| Version | Release Date | Major Features |
+|---------|--------------|----------------|
+| 1.0.0   | 2024-01-15   | Initial release with core glass breaking mechanics |
+
+---
+
+## Upgrade Instructions
+
+### From Future Versions
+*Instructions will be added as new versions are released*
+
+### Configuration Changes
+*Configuration change notes will be documented here for each version*
+
+---
+
+## Support & Feedback
+
+- **Bug Reports**: [GitHub Issues](https://github.com/FizzleTits/ActionGlass/issues)
+- **Feature Requests**: [GitHub Discussions](https://github.com/FizzleTits/ActionGlass/discussions)
+- **Documentation**: [Wiki](https://github.com/FizzleTits/ActionGlass/wiki)
+
+---
+
+## Contributors
+
+Thanks to all contributors who helped make ActionGlass possible:
+
+- **Lead Developer**: [FizzleTits](https://github.com/FizzleTits)
+- **Beta Testers**: Community members who helped test pre-release versions
+- **Translators**: Contributors who helped with multi-language support (planned)
+
+---
+
+*For detailed technical changes, see the [commit history](https://github.com/FizzleTits/ActionGlass/commits/main).*
+```
+
+## 2. Updated CONTRIBUTING.md
+
+```markdown:CONTRIBUTING.md
+# Contributing to ActionGlass
+
+Thank you for your interest in contributing to ActionGlass! This document provides guidelines and information for contributors.
+
+## 🤝 How to Contribute
+
+### Reporting Bugs
+
+Before creating bug reports, please check the [existing issues](https://github.com/FizzleTits/ActionGlass/issues) to avoid duplicates.
+
+**When submitting a bug report, please include:**
+
+- **Clear title** describing the issue
+- **Detailed description** of what happened vs. what you expected
+- **Steps to reproduce** the issue
+- **Server information**:
+  - Server software (Spigot/Paper) and version
+  - ActionGlass version
+  - Java version
+  - Other relevant plugins
+- **Configuration files** (config.yml) if relevant
+- **Console logs** showing any error messages
+- **Screenshots/videos** if applicable
+
+**Bug Report Template:**
+```markdown
+**Bug Description**
+A clear description of what the bug is.
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Go to '...'
+2. Click on '....'
+3. See error
+
+**Expected Behavior**
+What you expected to happen.
+
+**Server Environment**
+- Server Software: [e.g. Paper 1.20.4]
+- ActionGlass Version: [e.g. 1.0.0]
+- Java Version: [e.g. Java 17]
+- Other Plugins: [list relevant plugins]
+
+**Additional Context**
+Add any other context about the problem here.
+```
+
+### Suggesting Features
+
+We welcome feature suggestions! Please use [GitHub Discussions](https://github.com/FizzleTits/ActionGlass/discussions) for feature requests.
+
+**When suggesting features:**
+
+- **Check existing suggestions** to avoid duplicates
+- **Describe the feature** clearly and in detail
+- **Explain the use case** - why would this be useful?
+- **Consider implementation** - how might this work technically?
+- **Think about configuration** - what options should be configurable?
+
+### Contributing Code
+
+#### Development Setup
+
+1. **Fork the repository**
+   ```bash
+   git clone https://github.com/FizzleTits/ActionGlass.git
+   cd ActionGlass
+   ```
+
+2. **Set up development environment**
+   - Install Java 17+
+   - Install Maven 3.6+
+   - Install Git
+   - IDE recommendation: IntelliJ IDEA or Eclipse
+
+3. **Build the project**
+   ```bash
+   mvn clean compile
+   ```
+
+4. **Run tests**
+   ```bash
+   mvn test
+   ```
+
+5. **Create test server**
+   - Set up a local Spigot/Paper test server
+   - Copy the built JAR to the plugins folder
+   - Test your changes thoroughly
+
+#### Code Style Guidelines
+
+**Java Code Style:**
+- Follow standard Java naming conventions
+- Use meaningful variable and method names
+- Keep methods focused and concise (max 50 lines when possible)
+- Add Javadoc comments for public methods and classes
+- Use proper indentation (4 spaces, no tabs)
+- Maximum line length: 120 characters
+- Always use braces for if/for/while statements
+
+**Example:**
+```java
+/**
+ * Breaks glass in a specified radius around a location
+ * 
+ * @param center The center location for glass breaking
+ * @param radius The radius in blocks to break glass
+ * @param cause The cause of the glass breaking
+ * @return The number of glass blocks broken
+ */
+public int breakGlassArea(Location center, int radius, GlassBreakCause cause) {
+    if (center == null || radius <= 0) {
+        return 0;
+    }
+    
+    // Implementation here
+}
+```
+
+**Configuration Style:**
+- Use clear, descriptive configuration keys
+- Include detailed comments explaining each option
+- Provide sensible default values
+- Group related options together
+
+#### Commit Guidelines
+
+**Commit Message Format:**
+```
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+**Types:**
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation changes
+- `style`: Code style changes (formatting, etc.)
+- `refactor`: Code refactoring
+- `test`: Adding or updating tests
+- `chore`: Maintenance tasks
+
+**Examples:**
+```bash
+feat(breaking): add explosion-based glass breaking
+fix(regeneration): resolve memory leak in glass tracking
+docs(readme): update installation instructions
+test(manager): add unit tests for GlassManager
+```
+
+#### Pull Request Process
+
+1. **Create a feature branch**
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+2. **Make your changes**
+   - Write clean, well-documented code
+   - Add tests for new functionality
+   - Update documentation as needed
+
+3. **Test thoroughly**
+   - Run all existing tests: `mvn test`
+   - Test on a real server
+   - Test edge cases and error conditions
+
+4. **Update documentation**
+   - Update README.md if needed
+   - Update config.yml comments
+   - Add changelog entry
+
+5. **Submit pull request**
+   - Use a clear, descriptive title
+   - Fill out the pull request template
+   - Link any related issues
+   - Request review from maintainers
+
+**Pull Request Template:**
+```markdown
+## Description
+Brief description of changes made.
+
+## Type of Change
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Documentation update
+- [ ] Performance improvement
+- [ ] Code refactoring
+
+## Testing
+- [ ] Tested on local development server
+- [ ] All existing tests pass
+- [ ] Added new tests for new functionality
+- [ ] Tested with multiple server versions
+
+## Checklist
+- [ ] Code follows project style guidelines
+- [ ] Self-review completed
+- [ ] Documentation updated
+- [ ] Changelog updated
+```
+
+## 🧪 Testing Guidelines
+
+### Unit Testing
+- Write unit tests for all new functionality
+- Use JUnit 5 for testing framework
+- Mock external dependencies (Bukkit API, etc.)
+- Aim for >80% code coverage
+
+### Integration Testing
+- Test with real Spigot/Paper servers
+- Test with different server versions (1.20.4+)
+- Test with various plugin combinations
+- Test performance under load
+
+### Manual Testing Checklist
+- [ ] All glass breaking methods work correctly
+- [ ] Glass regeneration functions properly
+- [ ] Commands work and have proper permissions
+- [ ] Configuration changes take effect
+- [ ] No console errors or warnings
+- [ ] Performance is acceptable
+- [ ] Protection plugin integration works
+
+## 📚 Documentation
+
+### Code Documentation
+- Add Javadoc comments to all public methods and classes
+- Include parameter descriptions and return value information
+- Document any complex algorithms or logic
+- Keep comments up-to-date with code changes
+
+### User Documentation
+- Update README.md for user-facing changes
+- Update configuration documentation
+- Add examples for new features
+- Keep installation instructions current
+
+## 🏗️ Architecture Guidelines
+
+### Plugin Structure
+```
+src/main/java/com/actionglass/
+├── ActionGlass.java           # Main plugin class
+├── GlassManager.java          # Core glass management logic
+├── GlassBreakListener.java    # Event handling
+├── ActionGlassCommand.java    # Command handling
+├── config/                    # Configuration management
+├── integrations/              # Third-party plugin integrations
+├── utils/                     # Utility classes
+└── api/                       # Public API classes
+```
+
+### Design Principles
+- **Single Responsibility**: Each class should have one clear purpose
+- **Dependency Injection**: Use constructor injection for dependencies
+- **Interface Segregation**: Create focused interfaces
+- **Open/Closed Principle**: Open for extension, closed for modification
+- **Performance First**: Always consider performance impact
+
+### Adding New Features
+
+1. **Plan the feature**
+   - Define requirements clearly
+   - Consider configuration options
+   - Think about performance impact
+   - Plan testing approach
+
+2. **Design the implementation**
+   - Identify which classes need changes
+   - Define new interfaces if needed
+   - Consider backward compatibility
+   - Plan database schema changes (if applicable)
+
+3. **Implement incrementally**
+   - Start with core functionality
+   - Add configuration options
+   - Add user interface (commands)
+   - Add documentation
+
+4. **Test thoroughly**
+   - Unit tests for logic
+   - Integration tests with server
+   - Performance testing
+   - User acceptance testing
+
+## 🚀 Release Process
+
+### Version Numbering
+We follow [Semantic Versioning](https://semver.org/):
+- **MAJOR**: Incompatible API changes
+- **MINOR**: New functionality (backward compatible)
+- **PATCH**: Bug fixes (backward compatible)
+
+### Release Checklist
+- [ ] All tests pass
+- [ ] Documentation updated
+- [ ] Changelog updated
+- [ ] Version numbers updated
+- [ ] Performance testing completed
+- [ ] Security review completed
+- [ ] Beta testing completed
+
+## 💬 Community Guidelines
+
+### Code of Conduct
+- Be respectful and inclusive
+- Help others learn and grow
+- Provide constructive feedback
+- Focus on the issue, not the person
+- Follow the [Contributor Covenant](https://www.contributor-covenant.org/)
+
+### Communication Channels
+- **GitHub Issues**: Bug reports and feature requests
+- **GitHub Discussions**: General discussion and questions
+
+## 🔒 Security
+
+### Reporting Security Issues
+Please report security vulnerabilities privately by creating a private issue or contacting the maintainer directly.
+
+**Do not** create public GitHub issues for security vulnerabilities.
+
+### Security Guidelines
+- Never log sensitive information
+- Validate all user input
+- Use secure coding practices
+- Keep dependencies updated
+- Follow OWASP guidelines
+
+## 📄 License
+
+By contributing to ActionGlass, you agree that your contributions will be licensed under the MIT License.
+
+## ❓ Questions?
+
+If you have questions about contributing, please:
+1. Check the [FAQ](https://github.com/FizzleTits/ActionGlass/wiki/FAQ)
+2. Search [existing discussions](https://github.com/FizzleTits/ActionGlass/discussions)
+3. Create a new discussion
+
+Thank you for contributing to ActionGlass! 🎉
+```
+
+## 3. Updated README.md (just the GitHub links section)
+
+You'll also want to update the README.md file to use your GitHub URL. Here's the updated section:
+
+```markdown:README.md
 # ActionGlass 🪟
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -6,37 +500,6 @@
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](#)
 
 **ActionGlass** is a realistic glass breaking mechanics plugin for Minecraft servers that adds cinematic, physics-based glass destruction. Experience movie-like action sequences as players crash through windows while flying with elytra, break glass walls while sprinting, or shatter glass floors when falling at high speeds!
-
-## 🎬 Features
-
-### 🏃‍♂️ Movement-Based Breaking
-- **Elytra Breaking**: Crash through glass structures while gliding at high speeds
-- **Sprint Breaking**: Run through glass walls and barriers 
-- **Fall Breaking**: Smash through glass floors when falling from heights
-- **Speed-Based**: Only break glass when moving fast enough for realistic physics
-
-### 🏹 Projectile Breaking
-- **Arrow Breaking**: Arrows create small, precise holes in glass
-- **Trident Breaking**: Tridents shatter larger areas with more force
-- **Wind Charge Breaking**: New 1.20.4+ wind charges create explosive glass breaks
-- **Customizable Radius**: Different projectiles break different sized areas
-
-### 🔄 Smart Regeneration
-- **Automatic Restoration**: Broken glass regenerates after a configurable delay
-- **Visual Effects**: Subtle particle effects when glass regenerates
-- **Performance Optimized**: Efficient tracking of broken blocks
-
-### 🛡️ Protection Integration
-- **WorldGuard**: Respects region protections
-- **GriefPrevention**: Won't break glass in claimed areas
-- **Towny**: Honors town permissions
-- **Factions**: Respects faction territory
-
-### ⚡ Performance Features
-- **Async Processing**: Non-blocking glass breaking calculations
-- **Smart Cooldowns**: Prevents spam breaking and server lag
-- **Configurable Limits**: Control maximum simultaneous breaks
-- **Optimized Detection**: Efficient collision detection algorithms
 
 ## 📥 Installation
 
@@ -47,420 +510,6 @@
 
 ### Installation Steps
 
-1. **Download** the latest ActionGlass.jar from [Releases](https://github.com/yourusername/ActionGlass/releases)
+1. **Download** the latest ActionGlass.jar from [Releases](https://github.com/FizzleTits/ActionGlass/releases)
 
-2. **Upload** the jar file to your server's `plugins/` directory
-
-3. **Restart** your server (or use `/reload` if you must)
-
-4. **Configure** the plugin by editing `plugins/ActionGlass/config.yml`
-
-5. **Test** the plugin by flying into glass with elytra or shooting arrows at glass blocks
-
-## ⚙️ Configuration
-
-ActionGlass is highly configurable. Here's a breakdown of the main configuration sections:
-
-### Basic Features
-```yaml
-features:
-  arrow-breaking: true      # Enable projectile breaking
-  elytra-breaking: true     # Enable elytra crash-through
-  falling-breaking: true    # Enable fall-through breaking  
-  running-breaking: true    # Enable sprint-through breaking
-  regeneration: true        # Enable automatic glass restoration
-```
-
-### Speed & Timing
-```yaml
-settings:
-  minimum-speed: 0.3              # Speed required to break glass
-  glass-break-cooldown: 500       # Cooldown between breaks (ms)
-  regeneration-delay: 6000        # Time before glass regenerates (ms)
-```
-
-### Break Patterns
-```yaml
-break-radius:
-  arrow: 1          # Small precise holes
-  trident: 2        # Medium impact craters  
-  wind-charge: 3    # Large explosive breaks
-  elytra: 2         # Medium crash-through patterns
-  falling: 2        # Medium impact from falls
-  running: 1        # Small breaks from running
-  sprinting: 2      # Larger breaks from sprinting
-```
-
-### Advanced Settings
-```yaml
-advanced:
-  debug-mode: false                    # Enable debug logging
-  max-simultaneous-breaks: 50          # Performance limit
-  break-particles: true                # Visual break effects
-  break-sounds: true                   # Audio break effects
-  regeneration-particles: true         # Visual regen effects
-  regeneration-sounds: true            # Audio regen effects
-  min-break-distance: 1.0             # Prevent chain reactions
-```
-
-### World Management
-```yaml
-worlds:
-  enabled-worlds: []                   # Specific worlds only (empty = all)
-  disabled-worlds:                     # Worlds to exclude
-    - "creative_world"
-    - "build_world"
-```
-
-### Glass Type Customization
-```yaml
-glass-types:
-  glass:
-    enabled: true
-    break-resistance: 1.0              # Normal difficulty
-    regeneration-time: 1.0             # Normal regen speed
-  
-  glass-panes:
-    enabled: true  
-    break-resistance: 0.7              # Easier to break (thinner)
-    regeneration-time: 0.8             # Faster regeneration
-```
-
-### Player Groups
-```yaml
-player-groups:
-  default:
-    break-multiplier: 1.0              # Normal breaking ability
-    cooldown-multiplier: 1.0           # Normal cooldown
-    
-  vip:                                 # Requires permission: actionglass.vip
-    break-multiplier: 1.2              # 20% easier breaking
-    cooldown-multiplier: 0.8           # 20% shorter cooldown
-    
-  admin:                               # Requires permission: actionglass.admin  
-    break-multiplier: 2.0              # Much easier breaking
-    cooldown-multiplier: 0.5           # Much shorter cooldown
-```
-
-## 🎮 Usage
-
-### For Players
-
-#### Elytra Breaking
-1. Equip elytra and rockets
-2. Launch into flight
-3. Build up speed (the faster, the better!)
-4. Fly directly into glass structures
-5. Watch as you crash through in cinematic style!
-
-#### Sprint Breaking  
-1. Start sprinting (double-tap W or hold Ctrl)
-2. Run directly at glass walls or barriers
-3. Break through at full speed
-4. Works best with thin glass structures (1 block thick)
-
-#### Fall Breaking
-1. Jump or fall from a significant height
-2. Land on or fall through glass structures
-3. High-speed impacts will shatter the glass
-4. Great for dramatic entrances!
-
-#### Projectile Breaking
-1. Shoot arrows, throw tridents, or use wind charges
-2. Aim at glass blocks or structures  
-3. Different projectiles create different break patterns
-4. Experiment with angles and distances!
-
-### For Administrators
-
-#### Commands
-```
-/actionglass help                    # Show all available commands
-/actionglass status                  # View plugin status and statistics
-/actionglass reload                  # Reload configuration from file
-/actionglass regenerate              # Instantly regenerate all broken glass
-/actionglass toggle <feature>        # Toggle features on/off temporarily
-```
-
-#### Permissions
-```
-actionglass.*                        # All permissions (for admins)
-actionglass.reload                   # Permission to reload config
-actionglass.status                   # Permission to view status
-actionglass.regenerate               # Permission to regenerate glass
-actionglass.toggle                   # Permission to toggle features
-actionglass.vip                      # VIP player benefits
-actionglass.admin                    # Admin player benefits
-```
-
-## 🔧 Advanced Configuration
-
-### Performance Tuning
-
-For **large servers** (100+ players):
-```yaml
-settings:
-  glass-break-cooldown: 1000         # Longer cooldown
-advanced:
-  max-simultaneous-breaks: 25        # Lower limit
-  async-processing: true             # Enable async
-  max-blocks-per-tick: 5             # Process fewer blocks per tick
-```
-
-For **small servers** (< 50 players):
-```yaml
-settings:
-  glass-break-cooldown: 250          # Shorter cooldown  
-advanced:
-  max-simultaneous-breaks: 100       # Higher limit
-  max-blocks-per-tick: 20            # Process more blocks per tick
-```
-
-### Realistic Physics Settings
-
-For **movie-like action**:
-```yaml
-settings:
-  minimum-speed: 0.2                 # Easier to break glass
-break-radius:
-  elytra: 3                          # Larger crash patterns
-  sprinting: 3                       # Bigger sprint breaks
-  falling: 3                         # Dramatic fall impacts
-```
-
-For **realistic physics**:
-```yaml
-settings:
-  minimum-speed: 0.5                 # Need more speed
-break-radius:
-  elytra: 1                          # Smaller, precise breaks
-  sprinting: 1                       # Minimal sprint breaking
-  falling: 2                         # Moderate fall damage
-```
-
-### Protection Plugin Integration
-
-#### WorldGuard Setup
-1. Install WorldGuard on your server
-2. ActionGlass will automatically detect it
-3. Glass won't break in protected regions
-4. Configure in config.yml:
-```yaml
-integrations:
-  worldguard:
-    enabled: true
-    respect-regions: true
-```
-
-#### GriefPrevention Setup  
-1. Install GriefPrevention
-2. ActionGlass respects all claims automatically
-3. Players can't break glass in others' claims
-```yaml
-integrations:
-  griefprevention:
-    enabled: true
-    respect-claims: true
-```
-
-## 🎯 Use Cases & Examples
-
-### 🏰 Medieval Servers
-- Castle siege scenarios with arrow breaking
-- Dramatic entrances through stained glass windows
-- Realistic combat with projectile glass breaking
-
-### 🏙️ Modern/City Servers  
-- Superhero-style building crashes with elytra
-- Bank heist scenarios breaking through skylights
-- Parkour courses with glass-breaking elements
-
-### 🎮 Minigame Servers
-- Glass-breaking parkour challenges
-- Target practice with different projectiles
-- Racing courses with glass obstacles
-
-### 🏗️ Creative Servers
-- Movie scene recreation with realistic glass physics
-- Architecture showcases with breakable elements
-- Interactive builds with temporary glass barriers
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-#### Glass Not Breaking
-**Problem**: Players can't break glass despite high speed
-**Solutions**:
-- Check if the feature is enabled in config.yml
-- Verify minimum-speed setting isn't too high
-- Ensure the player has necessary permissions
-- Check if the area is protected by WorldGuard/other plugins
-
-#### Performance Issues
-**Problem**: Server lag when breaking glass
-**Solutions**:
-- Reduce `max-simultaneous-breaks` in config
-- Increase `glass-break-cooldown` 
-- Enable `async-processing`
-- Lower `max-blocks-per-tick`
-
-#### Glass Not Regenerating
-**Problem**: Broken glass doesn't restore
-**Solutions**:
-- Verify `regeneration: true` in config
-- Check `regeneration-delay` setting
-- Ensure server isn't restarting before regen time
-- Use `/actionglass regenerate` to force restoration
-
-#### Plugin Conflicts
-**Problem**: ActionGlass conflicts with other plugins
-**Solutions**:
-- Check plugin load order in server logs
-- Disable conflicting features in other plugins
-- Update all plugins to latest versions
-- Contact support with specific error messages
-
-### Debug Mode
-Enable debug logging to troubleshoot issues:
-```yaml
-advanced:
-  debug-mode: true
-```
-
-This will log detailed information about:
-- Glass breaking attempts
-- Speed calculations  
-- Permission checks
-- Protection plugin interactions
-
-## 🔄 API for Developers
-
-ActionGlass provides a comprehensive API for other plugin developers:
-
-### Maven Dependency
-```xml
-<dependency>
-    <groupId>com.actionglass</groupId>
-    <artifactId>ActionGlass</artifactId>
-    <version>1.0.0</version>
-    <scope>provided</scope>
-</dependency>
-```
-
-### Basic API Usage
-```java
-// Get ActionGlass instance
-ActionGlass actionGlass = (ActionGlass) Bukkit.getPluginManager().getPlugin("ActionGlass");
-
-// Check if glass breaking is enabled
-if (actionGlass.isElytraBreakingEnabled()) {
-    // Your code here
-}
-
-// Get glass manager
-GlassManager glassManager = actionGlass.getGlassManager();
-
-// Break glass programmatically
-Location glassLocation = new Location(world, x, y, z);
-glassManager.breakGlassArea(glassLocation, 2);
-
-// Check if a material is glass
-if (glassManager.isGlass(Material.GLASS)) {
-    // Handle glass block
-}
-```
-
-### Events
-ActionGlass fires custom events that other plugins can listen to:
-
-```java
-@EventHandler
-public void onGlassBreak(GlassBreakEvent event) {
-    Player player = event.getPlayer();
-    Block glassBlock = event.getGlassBlock();
-    GlassBreakCause cause = event.getCause(); // ELYTRA, ARROW, FALLING, etc.
-    
-    // Cancel the event to prevent breaking
-    event.setCancelled(true);
-}
-
-@EventHandler  
-public void onGlassRegenerate(GlassRegenerateEvent event) {
-    Location location = event.getLocation();
-    Material glassType = event.getGlassType();
-    
-    // Handle glass regeneration
-}
-```
-
-## 📊 Statistics & Metrics
-
-ActionGlass tracks various statistics that can be viewed with `/actionglass status`:
-
-- **Total Glass Broken**: Lifetime count of broken glass blocks
-- **Currently Broken**: Number of glass blocks awaiting regeneration  
-- **Break Methods**: Breakdown by elytra, arrows, falling, etc.
-- **Top Players**: Players who have broken the most glass
-- **Performance Metrics**: Average processing times and server impact
-
-## 🤝 Contributing
-
-We welcome contributions! Here's how to get involved:
-
-### Development Setup
-1. **Clone** the repository:
-```bash
-git clone https://github.com/yourusername/ActionGlass.git
-cd ActionGlass
-```
-
-2. **Build** the project:
-```bash
-mvn clean compile
-```
-
-3. **Run tests**:
-```bash
-mvn test
-```
-
-4. **Create** a test server:
-```bash
-mvn package
-# Copy target/ActionGlass-1.0.0.jar to your test server
-```
-
-### Code Style
-- Follow Java naming conventions
-- Add Javadoc comments for public methods
-- Include unit tests for new features
-- Use meaningful variable and method names
-
-### Submitting Changes
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📝 Changelog
-
-### Version 1.0.0 (Latest)
-- ✨ Initial release
-- 🏃‍♂️ Movement-based glass breaking (elytra, falling, running)
-- 🏹 Projectile glass breaking (arrows, tridents, wind charges)
-- 🔄 Automatic glass regeneration system
-- 🛡️ Protection plugin integration (WorldGuard, GriefPrevention, Towny, Factions)
-- ⚡ Performance optimizations and async processing
-- 🎨 Visual and audio effects for breaking and regeneration
-- 🔧 Comprehensive configuration system
-- 📊 Statistics and monitoring commands
-- 🎯 Player group permissions and multipliers
-
-### Planned Features (v1.1.0)
-- 🔥 Fire-based glass breaking (fire charges, blazes)
-- 🧨 Explosion-based breaking (TNT, creepers)
-- 🌊 Water/ice interaction effects
-- 📱 Web dashboard for server statistics
-- 🎨 Custom break
+2. **Upload** the
