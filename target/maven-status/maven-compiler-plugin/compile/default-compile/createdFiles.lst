@@ -1,0 +1,10 @@
+com/actionglass/managers/GlassManager$1.class
+com/actionglass/listeners/GlassBreakListener.class
+com/actionglass/commands/ActionGlassCommand.class
+com/actionglass/ActionGlass.class
+com/actionglass/managers/StatisticsManager.class
+com/actionglass/managers/GlassManager.class
+com/actionglass/config/ConfigManager.class
+com/actionglass/integrations/IntegrationManager.class
+com/actionglass/managers/GlassManager$GlassBlock.class
+com/actionglass/managers/StatisticsManager$PlayerStats.class

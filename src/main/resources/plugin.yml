@@ -1,0 +1,34 @@
+name: ActionGlass
+version: 1.0.0
+main: com.actionglass.ActionGlass
+api-version: 1.20
+author: YourName
+description: Realistic glass breaking mechanics for Minecraft servers
+website: https://github.com/yourusername/ActionGlass
+
+commands:
+  actionglass:
+    description: Main ActionGlass command
+    usage: /actionglass <subcommand>
+    aliases: [ag, glass]
+
+permissions:
+  actionglass.*:
+    description: All ActionGlass permissions
+    children:
+      actionglass.reload: true
+      actionglass.status: true
+      actionglass.regenerate: true
+      actionglass.toggle: true
+  actionglass.reload:
+    description: Permission to reload the plugin configuration
+    default: op
+  actionglass.status:
+    description: Permission to view plugin status
+    default: op
+  actionglass.regenerate:
+    description: Permission to regenerate broken glass
+    default: op
+  actionglass.toggle:
+    description: Permission to toggle plugin features
+    default: op

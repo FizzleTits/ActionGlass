@@ -1,0 +1,7 @@
+/workspaces/ActionGlass/src/main/java/com/actionglass/config/ConfigManager.java
+/workspaces/ActionGlass/src/main/java/com/actionglass/managers/StatisticsManager.java
+/workspaces/ActionGlass/src/main/java/com/actionglass/listeners/GlassBreakListener.java
+/workspaces/ActionGlass/src/main/java/com/actionglass/commands/ActionGlassCommand.java
+/workspaces/ActionGlass/src/main/java/com/actionglass/ActionGlass.java
+/workspaces/ActionGlass/src/main/java/com/actionglass/integrations/IntegrationManager.java
+/workspaces/ActionGlass/src/main/java/com/actionglass/managers/GlassManager.java
