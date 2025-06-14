@@ -3,20 +3,13 @@ package com.actionglass.listeners;
 import com.actionglass.ActionGlass;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.block.Action;
-import org.bukkit.projectiles.ProjectileSource;
+import org.bukkit.event.block.BlockBreakEvent;
 
 /**
- * Handles glass breaking events from various sources
+ * Handles glass breaking events
  */
 public class GlassBreakListener implements Listener {
     
@@ -26,92 +19,27 @@ public class GlassBreakListener implements Listener {
         this.plugin = plugin;
     }
     
-    /**
-     * Handle projectile hits on glass blocks
-     */
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onProjectileHit(ProjectileHitEvent event) {
-        Block hitBlock = event.getHitBlock();
-        if (hitBlock == null) return;
-        
-        if (!plugin.getGlassManager().isBreakableGlass(hitBlock.getType())) {
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        if (!plugin.getConfigManager().isGlassBreakingEnabled()) {
             return;
         }
         
-        Projectile projectile = event.getEntity();
-        ProjectileSource shooter = projectile.getShooter();
+        Block block = event.getBlock();
+        Player player = event.getPlayer();
         
-        // Check if shot by a player
-        if (shooter instanceof Player) {
-            Player player = (Player) shooter;
-            
-            // Check permissions
-            if (!player.hasPermission("actionglass.break")) {
-                return;
-            }
-            
-            // Check if player can break glass at this location
-            if (!plugin.getGlassManager().canBreakGlass(hitBlock, player)) {
-                return;
-            }
-            
-            // Break the glass
-            plugin.getGlassManager().breakGlass(hitBlock.getLocation());
-            
-            // Update statistics
+        // Check if it's glass
+        if (!plugin.getGlassManager().isBreakableGlass(block.getType())) {
+            return;
+        }
+        
+        // Let vanilla Minecraft handle punch breaking - no special mechanics
+        plugin.debug("Player " + player.getName() + " broke glass block normally at " + block.getLocation());
+        
+        // Add to statistics if enabled
+        if (plugin.getStatisticsManager() != null) {
             plugin.getStatisticsManager().addGlassBreak(player);
         }
     }
-    
-    /**
-     * Handle player interactions with glass (optional feature)
-     */
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onPlayerInteract(PlayerInteractEvent event) {
-        if (event.getAction() != Action.LEFT_CLICK_BLOCK) {
-            return;
-        }
-        
-        Block clickedBlock = event.getClickedBlock();
-        if (clickedBlock == null) return;
-        
-        if (!plugin.getGlassManager().isBreakableGlass(clickedBlock.getType())) {
-            return;
-        }
-        
-        Player player = event.getPlayer();
-        
-        // Check if punch-to-break is enabled in config
-        if (!plugin.getConfigManager().isPunchToBreakEnabled()) {
-            return;
-        }
-        
-        // Check permissions
-        if (!player.hasPermission("actionglass.break.punch")) {
-            return;
-        }
-        
-        // Check if player can break glass at this location
-        if (!plugin.getGlassManager().canBreakGlass(clickedBlock, player)) {
-            return;
-        }
-        
-        // Cancel the event to prevent normal block breaking
-        event.setCancelled(true);
-        
-        // Break the glass
-        plugin.getGlassManager().breakGlass(clickedBlock.getLocation());
-        
-        // Update statistics
-        plugin.getStatisticsManager().addGlassBreak(player);
-    }
-    
-    /**
-     * Handle entity damage events that might break glass
-     */
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onEntityDamage(EntityDamageByEntityEvent event) {
-        // This could be used for explosion damage to glass, etc.
-        // Implementation depends on specific requirements
-    }
 }
+

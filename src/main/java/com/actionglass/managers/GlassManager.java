@@ -1,53 +1,53 @@
 package com.actionglass.managers;
 
 import com.actionglass.ActionGlass;
-import com.actionglass.config.ConfigManager;
-import org.bukkit.*;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
 
 /**
- * Manages glass breaking and restoration mechanics
+ * Manages glass breaking and regeneration mechanics
  */
 public class GlassManager {
     
     private final ActionGlass plugin;
-    private final ConfigManager configManager;
-    private final Map<Location, GlassBlock> brokenGlass;
-    private final Map<Material, Integer> restoreTimes;
+    private final Map<Location, GlassData> brokenGlass = new ConcurrentHashMap<>();
+    private final Map<Location, Integer> regenerationTasks = new ConcurrentHashMap<>();
+    private Location normalizeLocation(Location location) {
+        return new Location(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
+    }
+
+    
+    // All 6 directions to check for thickness
+    private static final BlockFace[] ALL_FACES = {
+        BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, 
+        BlockFace.WEST, BlockFace.UP, BlockFace.DOWN
+    };
     
     public GlassManager(ActionGlass plugin) {
         this.plugin = plugin;
-        this.configManager = plugin.getConfigManager();
-        this.brokenGlass = new ConcurrentHashMap<>();
-        this.restoreTimes = new HashMap<>();
-        
-        initializeRestoreTimes();
     }
     
-    private void initializeRestoreTimes() {
-        // Load restore times from config
-        restoreTimes.put(Material.GLASS, configManager.getGlassRestoreTime());
-        restoreTimes.put(Material.GLASS_PANE, configManager.getGlassPaneRestoreTime());
-        restoreTimes.put(Material.WHITE_STAINED_GLASS, configManager.getStainedGlassRestoreTime());
-        restoreTimes.put(Material.WHITE_STAINED_GLASS_PANE, configManager.getStainedGlassPaneRestoreTime());
+    /**
+     * Data class to store glass information
+     */
+    private static class GlassData {
+        final Material material;
+        final BlockData blockData;
         
-        // Add all stained glass colors
-        for (Material material : Material.values()) {
-            if (material.name().contains("STAINED_GLASS") && !material.name().contains("PANE")) {
-                restoreTimes.put(material, configManager.getStainedGlassRestoreTime());
-            } else if (material.name().contains("STAINED_GLASS_PANE")) {
-                restoreTimes.put(material, configManager.getStainedGlassPaneRestoreTime());
-            }
-        }
-        
-        // Tinted glass (1.17+)
-        if (Material.getMaterial("TINTED_GLASS") != null) {
-            restoreTimes.put(Material.valueOf("TINTED_GLASS"), configManager.getTintedGlassRestoreTime());
+        GlassData(Material material, BlockData blockData) {
+            this.material = material;
+            this.blockData = blockData;
         }
     }
     
@@ -55,19 +55,103 @@ public class GlassManager {
      * Check if a material is breakable glass
      */
     public boolean isBreakableGlass(Material material) {
-        return restoreTimes.containsKey(material);
+        if (material == null) return false;
+        return material == Material.GLASS ||
+               material == Material.GLASS_PANE ||
+               material == Material.WHITE_STAINED_GLASS ||
+               material == Material.ORANGE_STAINED_GLASS ||
+               material == Material.MAGENTA_STAINED_GLASS ||
+               material == Material.LIGHT_BLUE_STAINED_GLASS ||
+               material == Material.YELLOW_STAINED_GLASS ||
+               material == Material.LIME_STAINED_GLASS ||
+               material == Material.PINK_STAINED_GLASS ||
+               material == Material.GRAY_STAINED_GLASS ||
+               material == Material.LIGHT_GRAY_STAINED_GLASS ||
+               material == Material.CYAN_STAINED_GLASS ||
+               material == Material.PURPLE_STAINED_GLASS ||
+               material == Material.BLUE_STAINED_GLASS ||
+               material == Material.BROWN_STAINED_GLASS ||
+               material == Material.GREEN_STAINED_GLASS ||
+               material == Material.RED_STAINED_GLASS ||
+               material == Material.BLACK_STAINED_GLASS ||
+               material == Material.WHITE_STAINED_GLASS_PANE ||
+               material == Material.ORANGE_STAINED_GLASS_PANE ||
+               material == Material.MAGENTA_STAINED_GLASS_PANE ||
+               material == Material.LIGHT_BLUE_STAINED_GLASS_PANE ||
+               material == Material.YELLOW_STAINED_GLASS_PANE ||
+               material == Material.LIME_STAINED_GLASS_PANE ||
+               material == Material.PINK_STAINED_GLASS_PANE ||
+               material == Material.GRAY_STAINED_GLASS_PANE ||
+               material == Material.LIGHT_GRAY_STAINED_GLASS_PANE ||
+               material == Material.CYAN_STAINED_GLASS_PANE ||
+               material == Material.PURPLE_STAINED_GLASS_PANE ||
+               material == Material.BLUE_STAINED_GLASS_PANE ||
+               material == Material.BROWN_STAINED_GLASS_PANE ||
+               material == Material.GREEN_STAINED_GLASS_PANE ||
+               material == Material.RED_STAINED_GLASS_PANE ||
+               material == Material.BLACK_STAINED_GLASS_PANE ||
+               material == Material.TINTED_GLASS;
     }
     
     /**
-     * Check if a player can break glass at the given location
+     * Check if glass structure is only 1 block thick in any direction
+     * A structure like 4x4x1 should be breakable, but 4x4x2 should not
+     */
+    private boolean isGlassSingleThickness(Block block) {
+        // For each direction, check if there are glass blocks 2 deep
+        for (BlockFace face : ALL_FACES) {
+            if (hasGlassDepth(block, face, 2)) {
+                plugin.debug("Glass at " + block.getLocation() + " is too thick in direction " + face);
+                return false;
+            }
+        }
+        
+        plugin.debug("Glass at " + block.getLocation() + " is single thickness - can break");
+        return true;
+    }
+    
+    /**
+     * Check if there are glass blocks at the specified depth in a direction
+     */
+    private boolean hasGlassDepth(Block startBlock, BlockFace direction, int depth) {
+        Block currentBlock = startBlock;
+        
+        for (int i = 0; i < depth; i++) {
+            currentBlock = currentBlock.getRelative(direction);
+            if (!isBreakableGlass(currentBlock.getType())) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Check if glass can be broken at this location
      */
     public boolean canBreakGlass(Block block, Player player) {
-        // Check if glass is already broken
+        // Check if already broken
         if (brokenGlass.containsKey(block.getLocation())) {
+            plugin.debug("Glass at " + block.getLocation() + " already broken");
             return false;
         }
         
-        // Add integration checks here (WorldGuard, PlotSquared, etc.)
+        // Check if glass is single thickness
+        if (!isGlassSingleThickness(block)) {
+            plugin.debug("Glass at " + block.getLocation() + " too thick to break");
+            return false;
+        }
+        
+        // Check integrations (WorldGuard, Towny, etc.)
+        if (plugin.getIntegrationManager() != null && player != null) {
+            boolean canBreak = plugin.getIntegrationManager().canBreakGlass(block.getLocation(), player);
+            if (!canBreak) {
+                plugin.debug("Integration manager denied glass breaking at " + block.getLocation());
+                return false;
+            }
+        }
+        
+        plugin.debug("Glass at " + block.getLocation() + " can be broken");
         return true;
     }
     
@@ -75,16 +159,19 @@ public class GlassManager {
      * Break glass at the specified location
      */
     public void breakGlass(Location location) {
+        if (location == null || location.getWorld() == null) return;
+        location = normalizeLocation(location);
         Block block = location.getBlock();
         Material originalMaterial = block.getType();
         
         if (!isBreakableGlass(originalMaterial)) {
+            plugin.debug("Block at " + location + " is not breakable glass: " + originalMaterial);
             return;
         }
         
-        // Store the original glass block
-        GlassBlock glassBlock = new GlassBlock(originalMaterial, block.getBlockData());
-        brokenGlass.put(location, glassBlock);
+        // Store original material and block data for exact regeneration
+        BlockData originalBlockData = block.getBlockData().clone();
+        brokenGlass.put(location, new GlassData(originalMaterial, originalBlockData));
         
         // Break the glass (set to air)
         block.setType(Material.AIR);
@@ -92,151 +179,146 @@ public class GlassManager {
         // Play break effects
         playBreakEffects(location);
         
-        // Schedule restoration
-        scheduleRestore(location, originalMaterial);
+        // Schedule regeneration
+        scheduleRegeneration(location, originalMaterial, originalBlockData);
+        
+        plugin.debug("Glass broken at " + location.toString() + " (was " + originalMaterial + ")");
     }
     
+    /**
+     * Play breaking effects
+     */
     private void playBreakEffects(Location location) {
-        World world = location.getWorld();
-        if (world == null) return;
-        
-        // Play sound
-        if (configManager.isGlassBreakSoundEnabled()) {
-            world.playSound(location, Sound.BLOCK_GLASS_BREAK, 
-                           configManager.getGlassBreakSoundVolume(), 
-                           configManager.getGlassBreakSoundPitch());
+        if (plugin.getConfigManager().isGlassBreakSoundEnabled()) {
+            location.getWorld().playSound(location, Sound.BLOCK_GLASS_BREAK,
+                    plugin.getConfigManager().getGlassBreakSoundVolume(),
+                    plugin.getConfigManager().getGlassBreakSoundPitch());
         }
         
-        // Spawn particles
-        if (configManager.isGlassBreakParticlesEnabled()) {
-            world.spawnParticle(Particle.BLOCK_CRACK, location.add(0.5, 0.5, 0.5), 
-                              configManager.getGlassBreakParticleCount());
+        if (plugin.getConfigManager().isGlassBreakParticlesEnabled()) {
+            Location particleLocation = location.clone().add(0.5, 0.5, 0.5);
+            location.getWorld().spawnParticle(Particle.BLOCK_CRACK,
+                    particleLocation,
+                    plugin.getConfigManager().getGlassBreakParticleCount(),
+                    0.3, 0.3, 0.3, 0.1,
+                    Material.GLASS.createBlockData());
         }
     }
     
-    private void scheduleRestore(Location location, Material material) {
-        int restoreTime = restoreTimes.getOrDefault(material, configManager.getGlassRestoreTime());
+    /**
+     * Schedule glass regeneration
+     */
+    private void scheduleRegeneration(Location location, Material originalMaterial, BlockData originalBlockData) {
+        int delay = plugin.getConfigManager().getGlassRestoreTime() * 20; // Convert to ticks
         
-        new BukkitRunnable() {
+        int taskId = new BukkitRunnable() {
             @Override
             public void run() {
-                restoreGlass(location);
+                regenerateGlass(location, originalMaterial, originalBlockData);
             }
-        }.runTaskLater(plugin, restoreTime * 20L); // Convert seconds to ticks
+        }.runTaskLater(plugin, delay).getTaskId();
+        
+        regenerationTasks.put(location.clone(), taskId);
     }
     
     /**
-     * Restore glass at the specified location
+     * Regenerate glass at exact location with exact block data
      */
-    public void restoreGlass(Location location) {
-        GlassBlock glassBlock = brokenGlass.remove(location);
-        if (glassBlock == null) return;
-        
+    private void regenerateGlass(Location location, Material originalMaterial, BlockData originalBlockData) {
         Block block = location.getBlock();
-        if (block.getType() != Material.AIR) {
-            // Block has been replaced, don't restore
-            return;
+        
+        // Only regenerate if still air
+        if (block.getType() == Material.AIR) {
+            // Set the exact block data to preserve orientation, properties, etc.
+            block.setBlockData(originalBlockData);
+            
+            // Play restore effects
+            playRestoreEffects(location);
+            
+            plugin.debug("Glass regenerated at " + location.toString() + " (restored to " + originalMaterial + ")");
         }
         
-        // Restore the glass
-        block.setType(glassBlock.material);
-        block.setBlockData(glassBlock.blockData);
-        
-        // Play restore effects
-        playRestoreEffects(location);
+        // Clean up tracking
+        brokenGlass.remove(location);
+        regenerationTasks.remove(location);
     }
     
     /**
-     * Restore glass with specific glass block data
+     * Play restoration effects
      */
-    public void restoreGlass(Location location, GlassBlock glassBlock) {
-        Block block = location.getBlock();
-        if (block.getType() != Material.AIR) {
-            return;
-        }
-        
-        block.setType(glassBlock.material);
-        block.setBlockData(glassBlock.blockData);
-        
-        playRestoreEffects(location);
-    }
-    
     private void playRestoreEffects(Location location) {
-        World world = location.getWorld();
-        if (world == null) return;
-        
-        // Play sound
-        if (configManager.isGlassRestoreSoundEnabled()) {
-            world.playSound(location, Sound.BLOCK_GLASS_PLACE, 
-                           configManager.getGlassRestoreSoundVolume(), 
-                           configManager.getGlassRestoreSoundPitch());
+        if (plugin.getConfigManager().isGlassRestoreSoundEnabled()) {
+            location.getWorld().playSound(location, Sound.BLOCK_GLASS_PLACE,
+                    plugin.getConfigManager().getGlassRestoreSoundVolume(),
+                    plugin.getConfigManager().getGlassRestoreSoundPitch());
         }
         
-        // Spawn particles
-        if (configManager.isGlassRestoreParticlesEnabled()) {
-            world.spawnParticle(Particle.VILLAGER_HAPPY, location.add(0.5, 0.5, 0.5), 
-                              configManager.getGlassRestoreParticleCount());
+        if (plugin.getConfigManager().isGlassRestoreParticlesEnabled()) {
+            Location particleLocation = location.clone().add(0.5, 0.5, 0.5);
+            location.getWorld().spawnParticle(Particle.VILLAGER_HAPPY,
+                    particleLocation,
+                    plugin.getConfigManager().getGlassRestoreParticleCount(),
+                    0.3, 0.3, 0.3, 0.1);
         }
     }
     
     /**
-     * Get the count of currently broken glass blocks
+     * Regenerate all broken glass immediately (used on plugin disable)
+     */
+    public void regenerateAllGlass() {
+        plugin.getLogger().info("Regenerating " + brokenGlass.size() + " broken glass blocks...");
+        
+        // Cancel all pending regeneration tasks
+        for (Integer taskId : regenerationTasks.values()) {
+            plugin.getServer().getScheduler().cancelTask(taskId);
+        }
+        regenerationTasks.clear();
+        
+        // Restore all broken glass with exact block data
+        for (Map.Entry<Location, GlassData> entry : brokenGlass.entrySet()) {
+            Location location = entry.getKey();
+            GlassData glassData = entry.getValue();
+            Block block = location.getBlock();
+            
+            if (block.getType() == Material.AIR) {
+                block.setBlockData(glassData.blockData);
+            }
+        }
+        
+        brokenGlass.clear();
+    }
+    
+    /**
+     * Restore all broken glass immediately (alias for regenerateAllGlass)
+     */
+    public void restoreAllGlass() {
+        regenerateAllGlass();
+    }
+    
+    /**
+     * Get the number of currently broken glass blocks
      */
     public int getBrokenGlassCount() {
         return brokenGlass.size();
     }
     
     /**
-     * Restore all broken glass immediately
+     * Check if glass is currently broken at location
      */
-    public void restoreAllGlass() {
-        for (Map.Entry<Location, GlassBlock> entry : brokenGlass.entrySet()) {
-            restoreGlass(entry.getKey(), entry.getValue());
-        }
+    public boolean isGlassBroken(Location location) {
+        return brokenGlass.containsKey(location);
+    }
+    /**
+     * Clean up all data structures to prevent memory leaks
+     */
+    public void cleanup() {
+        // Cancel all scheduled regeneration tasks
+        plugin.getServer().getScheduler().cancelTasks(plugin);
+        
+        // Clear all collections
         brokenGlass.clear();
-    }
-    
-    /**
-     * Regenerate all glass (alias for restoreAllGlass)
-     */
-    public void regenerateAllGlass() {
-        restoreAllGlass();
-    }
-    
-    /**
-     * Get restore time for a specific material
-     */
-    public int getRestoreTime(Material material) {
-        return restoreTimes.getOrDefault(material, configManager.getGlassRestoreTime());
-    }
-    
-    /**
-     * Reload glass manager settings
-     */
-    /**
-     * Shutdown the glass manager
-     */
-    public void shutdown() {
-        // Restore all broken glass before shutdown
-        restoreAllGlass();
-        plugin.getLogger().info("GlassManager shutdown complete");
+        
+        plugin.debug("GlassManager cleanup completed");
     }
 
-    public void reload() {
-        restoreTimes.clear();
-        initializeRestoreTimes();
-    }
-    
-    /**
-     * Inner class to store glass block data
-     */
-    public static class GlassBlock {
-        public final Material material;
-        public final org.bukkit.block.data.BlockData blockData;
-        
-        public GlassBlock(Material material, org.bukkit.block.data.BlockData blockData) {
-            this.material = material;
-            this.blockData = blockData;
-        }
-    }
 }

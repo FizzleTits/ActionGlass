@@ -1,10 +1,12 @@
 com/actionglass/managers/GlassManager$1.class
-com/actionglass/listeners/GlassBreakListener.class
 com/actionglass/commands/ActionGlassCommand.class
+com/actionglass/listeners/ProjectileListener.class
 com/actionglass/ActionGlass.class
 com/actionglass/managers/StatisticsManager.class
+com/actionglass/integrations/IntegrationManager.class
+com/actionglass/managers/GlassManager$GlassData.class
+com/actionglass/listeners/MovementListener.class
+com/actionglass/listeners/GlassBreakListener.class
 com/actionglass/managers/GlassManager.class
 com/actionglass/config/ConfigManager.class
-com/actionglass/integrations/IntegrationManager.class
-com/actionglass/managers/GlassManager$GlassBlock.class
-com/actionglass/managers/StatisticsManager$PlayerStats.class
+com/actionglass/listeners/ProjectileListener$1.class

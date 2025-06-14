@@ -1,0 +1,9 @@
+# ActionGlass Statistics
+# This file stores player glass breaking statistics
+
+# Player statistics will be stored here automatically
+players: {}
+
+# Metadata
+last-updated: 0
+version: 1

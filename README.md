@@ -8,10 +8,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Planned Features
-- Fire-based glass breaking (fire charges, blazes)
-- Explosion-based breaking (TNT, creepers) 
-- Water/ice interaction effects
-- Web dashboard for server statistics
 - Custom break patterns and animations
 - Sound effect customization
 - Particle effect customization
