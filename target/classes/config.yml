@@ -1,268 +1,62 @@
-# ================================
-# ActionGlass Configuration
-# ================================
-# Realistic glass breaking mechanics for Minecraft servers
-# 
-# GitHub: https://github.com/FizzleTits/ActionGlass
-# Version: 1.0.0
+# ActionGlass Configuration File
+config-version: 1
 
-# ================================
-# GENERAL SETTINGS
-# ================================
-general:
-  # Enable debug mode for troubleshooting
-  debug: false
-  
-  # Worlds where ActionGlass is enabled (empty list = all worlds)
-  enabled-worlds: []
-  
-  # Worlds where ActionGlass is disabled
-  disabled-worlds: []
-
-# ================================
-# GLASS BREAKING MECHANICS
-# ================================
-breaking:
-  # Movement-based glass breaking
-  movement:
-    # Break glass when flying with elytra at high speed
-    elytra:
-      enabled: true
-      minimum-speed: 15.0
-      break-radius: 2
-      
-    # Break glass when falling at high speed
-    falling:
-      enabled: true
-      minimum-speed: 12.0
-      break-radius: 1
-      
-    # Break glass when running/sprinting at high speed
-    running:
-      enabled: true
-      minimum-speed: 8.0
-      break-radius: 1
-      requires-sprinting: true
-
-  # Projectile-based glass breaking
-  projectiles:
-    # Arrows break glass on impact
-    arrows:
-      enabled: true
-      break-radius: 1
-      minimum-velocity: 5.0
-      
-    # Tridents break glass on impact
-    tridents:
-      enabled: true
-      break-radius: 2
-      minimum-velocity: 8.0
-      
-    # Wind charges break glass (1.21+)
-    wind-charges:
-      enabled: true
-      break-radius: 2
-      minimum-velocity: 3.0
-
-  # Fire-based glass breaking (NEW)
-  fire:
-    # Fire charges break glass
-    fire-charges:
-      enabled: true
-      break-radius: 3
-      minimum-velocity: 5.0
-      
-    # Ghast fireballs break glass
-    ghast-fireballs:
-      enabled: true
-      break-radius: 4
-      minimum-velocity: 3.0
-      
-    # Blaze fireballs break glass
-    blaze-fireballs:
-      enabled: true
-      break-radius: 2
-      minimum-velocity: 4.0
-
-# ================================
-# GLASS TYPES & RESISTANCE
-# ================================
-glass-types:
-  # Regular glass blocks and panes
-  regular-glass:
-    enabled: true
-    resistance: 1.0
-    regeneration-multiplier: 1.0
-    
-  # Stained glass (all colors)
-  stained-glass:
-    enabled: true
-    resistance: 1.0
-    regeneration-multiplier: 1.0
-    
-  # Tinted glass (tougher than regular glass)
-  tinted-glass:
-    enabled: true
-    resistance: 1.5  # 50% more resistant
-    regeneration-multiplier: 1.2  # Takes 20% longer to regenerate
-
-# ================================
-# GLASS REGENERATION
-# ================================
-regeneration:
-  # Enable automatic glass regeneration
+# Glass Breaking Settings
+glass-breaking:
   enabled: true
+  minimum-speed: 0.3
+  restore-time: 30
   
-  # Base delay before glass regenerates (in seconds)
-  base-delay: 10
+  # Elytra Breaking
+  elytra-breaking: true
+  elytra-min-speed: 0.6
+  elytra-break-radius: 3.5
   
-  # Random variation in regeneration time (±seconds)
-  random-variation: 2
+  # Sprint Breaking
+  sprint-breaking: true
+  sprint-min-speed: 0.4
+  sprint-break-radius: 2.5
   
-  # Maximum number of broken glass blocks to track
-  max-tracked-blocks: 1000
-  
-  # Regeneration effects
-  effects:
-    # Play particle effects when glass regenerates
-    particles:
-      enabled: true
-      type: "BLOCK_CRACK"
-      count: 10
-      
-    # Play sound effects when glass regenerates
-    sounds:
-      enabled: true
-      type: "BLOCK_GLASS_PLACE"
-      volume: 0.5
-      pitch: 1.0
+  # Fall Breaking
+  fall-breaking: true
+  fall-break-height: 4.0
+  fall-min-speed: 0.5
+  fall-break-radius: 3.0
 
-# ================================
-# BREAKING EFFECTS
-# ================================
+# Effects
 effects:
-  # Effects when glass breaks
-  breaking:
-    # Particle effects
-    particles:
+  sounds:
+    glass-break:
       enabled: true
-      type: "BLOCK_CRACK"
-      count: 20
-      spread: 1.0
-      
-    # Sound effects
-    sounds:
-      enabled: true
-      type: "BLOCK_GLASS_BREAK"
       volume: 1.0
       pitch: 1.0
-      
-  # Additional effects for different break causes
-  special-effects:
-    # Extra effects for elytra breaking (more dramatic)
-    elytra:
-      extra-particles: 15
-      extra-sounds: true
-      
-    # Extra effects for projectile impacts
-    projectiles:
-      extra-particles: 10
-      impact-sound: true
+    glass-restore:
+      enabled: true
+      volume: 0.5
+      pitch: 1.2
+  particles:
+    glass-break:
+      enabled: true
+      count: 30
+    glass-restore:
+      enabled: true
+      count: 15
 
-# ================================
-# PERFORMANCE SETTINGS
-# ================================
-performance:
-  # Cooldown between glass breaks for the same player (milliseconds)
-  break-cooldown: 100
-  
-  # Maximum glass blocks that can be broken simultaneously
-  max-simultaneous-breaks: 50
-  
-  # Use async processing for glass breaking calculations
-  async-processing: true
-  
-  # Limit checks per tick to prevent lag
-  max-checks-per-tick: 20
+# Statistics
+statistics:
+  enabled: true
 
-# ================================
-# PROTECTION INTEGRATION
-# ================================
-protection:
-  # WorldGuard integration
+# Integrations
+integrations:
   worldguard:
     enabled: true
-    # Respect build permissions
-    respect-build-flag: true
-    # Custom flags (if available)
-    respect-glass-break-flag: true
-    
-  # Towny integration (IMPORTANT)
   towny:
     enabled: true
-    # Respect town permissions
-    respect-town-permissions: true
-    # Allow breaking in wilderness
-    allow-in-wilderness: true
-    # Respect plot permissions
-    respect-plot-permissions: true
-    
-  # Movecraft integration (IMPORTANT for ships)
-  movecraft:
-    enabled: true
-    # Allow glass breaking on moving crafts (ships)
-    allow-on-moving-crafts: true
-    # Require craft to be piloted for glass breaking
-    require-piloted-craft: false
-    # Extra effects for ship glass breaking
-    ship-breaking-effects: true
 
-# ================================
-# PLAYER GROUPS & PERMISSIONS
-# ================================
-player-groups:
-  # Default settings for all players
-  default:
-    break-multiplier: 1.0
-    cooldown-multiplier: 1.0
-    
-  # VIP players get enhanced breaking
-  vip:
-    break-multiplier: 1.2
-    cooldown-multiplier: 0.8
-    
-  # Admin/Staff settings
-  admin:
-    break-multiplier: 1.5
-    cooldown-multiplier: 0.5
-    bypass-protection: true
+# Debug mode
+debug: true
 
-# ================================
-# STATISTICS & LOGGING
-# ================================
-statistics:
-  # Track glass breaking statistics
-  enabled: true
-  
-  # Log glass breaking events
-  log-events: false
-  
-  # Reset statistics on server restart
-  reset-on-restart: false
-
-# ================================
-# ADVANCED SETTINGS
-# ================================
-advanced:
-  # Check for updates on startup
-  check-updates: true
-  
-  # Send anonymous usage statistics
-  metrics: true
-  
-  # Compatibility mode for older servers
-  compatibility-mode: false
-  
-  # Custom break patterns (future feature)
-  custom-patterns:
-    enabled: false
+# Performance settings
+performance:
+  max-chain-break-size: 50  # Maximum number of connected glass blocks to break in one chain
+  enable-async-processing: true  # Process large operations asynchronously
